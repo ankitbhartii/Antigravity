@@ -75,7 +75,7 @@ export const Controls: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 bg-slate-900/40 border border-slate-800 p-6 rounded-2xl backdrop-blur-md max-w-md w-full no-scrollbar overflow-y-auto max-h-[calc(100vh-140px)]">
+    <div className="flex flex-col gap-5 sm:gap-6 bg-slate-900/40 border border-slate-800 p-4 sm:p-6 rounded-2xl backdrop-blur-md w-full max-w-full lg:max-w-md no-scrollbar overflow-y-auto max-h-[40vh] lg:max-h-[calc(100vh-140px)]">
       
       {/* 1. Paste Tweet Link */}
       <div className="flex flex-col gap-2">
