@@ -7,11 +7,6 @@
 <p align="center">
   <img src="public/landing.png" width="100%" alt="Antigravity Landing Page" />
 </p>
-
-<p align="center">
-  <img src="public/dashboard.png" width="100%" alt="Antigravity Studio Dashboard" />
-</p>
-
 ---
 
 Antigravity is a premium, edge-native web application designed to turn Twitter/X posts and profiles into clean, beautiful screenshots and social media graphics. Built with **Next.js 15**, **Tailwind CSS v4**, **Zustand**, **Upstash Redis**, and **Supabase**, the application allows full customization of sizes, paddings, border radii, layouts, and color themes.
