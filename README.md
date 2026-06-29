@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Antigravity 🌌 (Pikaso Clone)
 
-## Getting Started
+Antigravity is a premium, edge-native web application designed to turn Twitter/X posts and profiles into clean, beautiful screenshots and social media graphics. Built with **Next.js 15**, **Tailwind CSS v4**, **Zustand**, **Upstash Redis**, and **Supabase**, the application allows full customization of sizes, paddings, border radii, layouts, and color themes.
 
-First, run the development server:
+---
+
+## 🚀 Key Features
+
+- **10 Unique Card Layouts**: Standard, Chat Bubble I, Chat Bubble II, Fab Bold, Iconic, Nova I (cyber-monospace), Nova II, Quote Card, Simple Text, and Square Block.
+- **Aspect Ratio Sizing**: Format automatically for Instagram Post (1:1), Instagram Story (9:16), or fit-to-bounds (Auto).
+- **Interactive Inline Editing**: Double-click directly on the preview card text, usernames, source, verified badge status, and metrics (likes, retweets) to type and customize them on the fly.
+- **Custom Profile Avatars**: Click on the profile avatar directly in the canvas to upload and crop a custom image from your local files.
+- **SSRF-Safe CORS Proxy**: Built-in router proxying and filtering out private IP blocks to fetch media safely.
+- **Edge-Native Satori Rendering**: `/api/og` endpoint converting layouts and swatches to high-res PNG vectors instantly.
+- **AI Avatar Upscaler**: Connects to Real-ESRGAN backend servers via RunPod/Modal, with Supabase Storage file caching.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Zustand + Immer, Lucide Icons.
+- **Backend / APIs**: Vercel Edge Functions, Zod schema validations.
+- **Database & Realtime**: Supabase PostgreSQL + Supabase Realtime CDC, Supabase Storage.
+- **Caching**: Upstash Redis (6-hour stale-while-revalidate TTL).
+- **Exporting**: Client-side `html-to-image` upscale rasterization.
+
+---
+
+## ⚙️ Environment Configuration
+
+Copy `.env.example` to `.env.local` and populate:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Core keys documented:
+- `NEXT_PUBLIC_SUPABASE_URL` & `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase API credentials.
+- `UPSTASH_REDIS_REST_URL` & `UPSTASH_REDIS_REST_TOKEN`: Upstash caching database REST endpoints.
+- `MODAL_API_KEY` / `RUNPOD_API_KEY`: Real-ESRGAN AI avatar upscaler GPU keys (optional).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Local Installation & Setup
 
-## Learn More
+1. **Clone the Repository & Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Initialize the Supabase Database**:
+   - Create a new project in your [Supabase Dashboard](https://supabase.com/).
+   - Open the SQL Editor in your project and copy-paste the query from `supabase/migrations/20260630_init_schema.sql` to initialize tables, RLS security policies, and realtime broadcast publications.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🎯 Verification & Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Run TypeScript type checks:
+  ```bash
+  npx tsc --noEmit
+  ```
+- Build production optimization bundle:
+  ```bash
+  npm run build
+  ```
