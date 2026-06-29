@@ -185,6 +185,11 @@ export interface StyleOptions {
   showAvatars: boolean;
   customBgGradient: string | null;
   frame: FrameKey;
+  // 3D Tilt
+  tiltX: number;        // -30 to 30 degrees
+  tiltY: number;        // -30 to 30 degrees
+  perspective: number;  // 400 to 1600 px
+  floatEffect: boolean; // enable CSS floating shadow animation
 }
 
 export interface AppState {
@@ -233,6 +238,11 @@ const DEFAULT_STYLE: StyleOptions = {
   showAvatars: true,
   customBgGradient: null,
   frame: "none",
+  // 3D Tilt defaults (flat/no tilt)
+  tiltX: 0,
+  tiltY: 0,
+  perspective: 900,
+  floatEffect: false,
 };
 
 export const useAppStore = create<AppState>()(
