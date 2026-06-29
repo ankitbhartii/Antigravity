@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        width: 320px;
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(135deg, #0b0f19, #1a153b);
+        color: #f8fafc;
+        text-align: center;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        background: linear-gradient(to right, #c084fc, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .desc {
+        font-size: 13px;
+        opacity: 0.8;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #a855f7, #6366f1);
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.1s, opacity 0.2s;
+        box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4);
+      }
+      .btn:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+      }
+      .btn:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn:disabled {
+        background: #1e293b;
+        color: #475569;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+      }
+      .footer {
+        font-size: 11px;
+        opacity: 0.4;
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #c084fc;">
+        <path d="M12 2.25a9.75 9.75 0 1 0 9.75 9.75A9.75 9.75 0 0 0 12 2.25zm0 17.5a7.75 7.75 0 1 1 7.75-7.75 7.75 7.75 0 0 1-7.75 7.75zm1.5-11.25h-3v3H9v3h1.5v-3h3v-3zm2-2.5h-7a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-11a1 1 0 0 0-1-1z" />
+      </svg>
+      <span>Antigravity</span>
+    </div>
+    <div class="desc">
+      Turn any X (Twitter) post or profile link into a premium design card.
+    </div>
+    <button id="capture-btn" class="btn">Customize Current Tweet</button>
+    <div class="footer">v1.0.0 • Designed by Antigravity</div>
+    <script src="popup.js"></script>
+  </body>
+</html>
