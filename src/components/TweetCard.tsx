@@ -782,8 +782,62 @@ export const TweetCard: React.FC<TweetCardProps> = ({
     );
   };
 
+  const renderMacOsHeader = () => {
+    if (styleOptions.frame !== "macos") return null;
+    return (
+      <div className="flex items-center w-full pb-3 border-b mb-4 select-none" style={{ borderColor: activeTheme.cardBorder }}>
+        {/* Window circles */}
+        <div className="flex gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+        </div>
+        {/* Centered mockup domain text */}
+        <span className="text-[10px] opacity-40 mx-auto font-mono">antigravity.studio</span>
+        <div className="w-[44px]" />
+      </div>
+    );
+  };
+
+  if (styleOptions.frame === "mobile") {
+    return (
+      <div 
+        className="relative border-[10px] rounded-[42px] shadow-2xl p-4 pt-10 pb-6 overflow-hidden flex flex-col items-center w-full max-w-[390px] mx-auto transition-all"
+        style={{ 
+          backgroundColor: activeTheme.cardBg, 
+          borderColor: activeTheme.isDark ? "#1e293b" : "#0f172a",
+          boxShadow: shadow ? "0 25px 50px -12px rgba(0, 0, 0, 0.6)" : "none"
+        }}
+      >
+        {/* Mobile Notch / Dynamic Island */}
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-[18px] rounded-full bg-slate-950 flex items-center justify-center gap-1.5 px-3 z-20">
+          <span className="w-1.5 h-1.5 rounded-full bg-slate-800" />
+          <div className="w-8 h-1 rounded bg-slate-800" />
+        </div>
+
+        {/* Phone Status Bar */}
+        <div className="absolute top-3.5 left-0 right-0 px-6 flex justify-between text-[9px] opacity-40 font-bold select-none z-20" style={{ color: activeTheme.cardText }}>
+          <span>9:41</span>
+          <div className="flex gap-1 items-center">
+            <span>5G</span>
+            <span className="w-3 h-2 border rounded-sm" />
+          </div>
+        </div>
+
+        {/* Main Card Content */}
+        <div className="w-full h-full flex flex-col relative" style={{ color: activeTheme.cardText }}>
+          {renderLayoutContent()}
+        </div>
+
+        {/* Phone Bottom Home Indicator Bar */}
+        <div className="w-32 h-1 rounded-full bg-slate-800 mt-4 mx-auto" />
+      </div>
+    );
+  }
+
   return (
     <div style={cardStyle} className="font-sans group relative transition-all duration-300">
+      {renderMacOsHeader()}
       {renderLayoutContent()}
       
       {/* Dynamic Watermark overlay */}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAppStore, LayoutKey, SizeKey, ThemeKey, THEMES } from "@/store/useAppStore";
+import { useAppStore, LayoutKey, SizeKey, ThemeKey, THEMES, FrameKey } from "@/store/useAppStore";
 import { Check, Info, RefreshCw, Sparkles, Link } from "lucide-react";
 
 export const Controls: React.FC = () => {
@@ -27,6 +27,12 @@ export const Controls: React.FC = () => {
     { key: "auto", label: "Auto Fit", aspect: "Fits card bounds" },
     { key: "ig_post", label: "Instagram Post", aspect: "1:1 Square" },
     { key: "ig_story", label: "Instagram Story", aspect: "9:16 Vertical" },
+  ];
+
+  const frames: { key: FrameKey; label: string; desc: string }[] = [
+    { key: "none", label: "No Frame", desc: "Clean card with no border wrap" },
+    { key: "macos", label: "macOS Window", desc: "Browser-like mockup title bar" },
+    { key: "mobile", label: "Mobile Mock", desc: "Smartphone silhouette outline" },
   ];
 
   const handleFetchTweet = async (e: React.FormEvent) => {
@@ -69,7 +75,7 @@ export const Controls: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 bg-slate-900/40 border border-slate-800 p-6 rounded-2xl backdrop-blur-md max-w-md w-full no-scrollbar overflow-y-auto max-h-[calc(100vh-140px)]">
+    <div className="flex flex-col gap-5 sm:gap-6 bg-slate-900/40 border border-slate-800 p-4 sm:p-6 rounded-2xl backdrop-blur-md w-full max-w-full lg:max-w-md no-scrollbar overflow-y-auto max-h-[40vh] lg:max-h-[calc(100vh-140px)]">
       
       {/* 1. Paste Tweet Link */}
       <div className="flex flex-col gap-2">
@@ -182,6 +188,27 @@ export const Controls: React.FC = () => {
             >
               <span className="text-xs font-bold">{s.label}</span>
               <span className="text-[9px] opacity-70 leading-tight">{s.aspect}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Mockup Frame Select */}
+      <div className="flex flex-col gap-2.5">
+        <span className="text-sm font-semibold text-slate-300">Mockup Frame</span>
+        <div className="grid grid-cols-3 gap-2">
+          {frames.map((f) => (
+            <button
+              key={f.key}
+              onClick={() => updateStyleOption("frame", f.key)}
+              className={`p-2.5 rounded-xl border text-center flex flex-col gap-1 transition-all ${
+                styleOptions.frame === f.key
+                  ? "bg-sky-500/10 border-sky-500 text-sky-400 shadow-md shadow-sky-500/5"
+                  : "bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+              }`}
+            >
+              <span className="text-xs font-bold">{f.label}</span>
+              <span className="text-[9px] opacity-70 leading-tight">{f.desc}</span>
             </button>
           ))}
         </div>

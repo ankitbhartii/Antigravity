@@ -15,6 +15,8 @@ export type LayoutKey =
   | "highlighted"
   | "focused";
 
+export type FrameKey = "none" | "macos" | "mobile";
+
 export type SizeKey = "auto" | "ig_post" | "ig_story";
 
 export type ThemeKey =
@@ -182,6 +184,7 @@ export interface StyleOptions {
   showMetrics: boolean;
   showAvatars: boolean;
   customBgGradient: string | null;
+  frame: FrameKey;
 }
 
 export interface AppState {
@@ -229,6 +232,7 @@ const DEFAULT_STYLE: StyleOptions = {
   showMetrics: true,
   showAvatars: true,
   customBgGradient: null,
+  frame: "none",
 };
 
 export const useAppStore = create<AppState>()(
