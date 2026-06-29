@@ -16,6 +16,8 @@ function DashboardContent() {
 
   const [scale, setScale] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const tiltWrapperRef = useRef<HTMLDivElement>(null);
+  const [hoverTilt, setHoverTilt] = useState({ x: 0, y: 0, hovering: false });
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -53,6 +55,27 @@ function DashboardContent() {
       loadMockTweet();
     }
   }, [searchParams]);
+
+  // Mouse-follow tilt handler
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!tiltWrapperRef.current) return;
+    const rect = tiltWrapperRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 to 1
+    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 to 1
+    // Max ±8 degrees of extra hover tilt on top of slider value
+    setHoverTilt({ x: dy * -8, y: dx * 8, hovering: true });
+  };
+
+  const handleMouseLeave = () => {
+    setHoverTilt({ x: 0, y: 0, hovering: false });
+  };
+
+  // Compute combined tilt (slider + mouse hover)
+  const totalTiltX = styleOptions.tiltX + hoverTilt.x;
+  const totalTiltY = styleOptions.tiltY + hoverTilt.y;
+  const hasTilt = totalTiltX !== 0 || totalTiltY !== 0;
 
   const fetchTweetData = async (url: string) => {
     useAppStore.setState({ status: "loading" });
@@ -197,19 +220,33 @@ function DashboardContent() {
           <div 
             ref={containerRef}
             className="flex-1 flex items-center justify-center w-full min-h-[450px] overflow-hidden py-6"
+            style={{ perspective: `${styleOptions.perspective}px` }}
           >
-            {/* The scaled wrapper */}
+            {/* The 3D tilt + scale wrapper */}
             <div 
+              ref={tiltWrapperRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className={styleOptions.floatEffect && !hoverTilt.hovering ? "card-floating" : ""}
               style={{
-                transform: `scale(${scale})`,
+                transform: `scale(${scale}) rotateX(${totalTiltX}deg) rotateY(${totalTiltY}deg)`,
                 transformOrigin: "center center",
+                transformStyle: "preserve-3d",
+                transition: hoverTilt.hovering
+                  ? "transform 0.08s ease-out"
+                  : "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
                 width: styleOptions.size === "ig_story" ? "360px" : "550px",
                 height: styleOptions.size === "ig_story" ? "640px" : styleOptions.size === "ig_post" ? "550px" : "auto",
                 minHeight: styleOptions.size === "auto" ? "250px" : undefined,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                flexShrink: 0
+                flexShrink: 0,
+                cursor: hasTilt ? "grab" : "default",
+                // Floating animation via CSS filter
+                filter: hasTilt
+                  ? `drop-shadow(0 ${Math.abs(totalTiltX) * 2}px ${Math.abs(totalTiltX) * 3 + 20}px rgba(99,102,241,0.3)) drop-shadow(0 ${Math.abs(totalTiltY)}px ${Math.abs(totalTiltY) * 2 + 10}px rgba(0,0,0,0.5))`
+                  : "none",
               }}
             >
               {/* The actual exportable canvas node */}
@@ -229,6 +266,24 @@ function DashboardContent() {
                   onTweetDataChange={updateTweetData}
                 />
               </div>
+
+              {/* 3D side-glow edge when tilted — pure CSS illusion of depth */}
+              {hasTilt && (
+                <div
+                  className="absolute inset-0 pointer-events-none rounded-inherit"
+                  style={{
+                    background: `linear-gradient(
+                      ${135 + totalTiltY * 2}deg,
+                      rgba(99,102,241,${Math.min(Math.abs(totalTiltY) / 60, 0.18)}) 0%,
+                      transparent 40%,
+                      transparent 60%,
+                      rgba(0,0,0,${Math.min(Math.abs(totalTiltY) / 60, 0.25)}) 100%
+                    )`,
+                    borderRadius: `${styleOptions.rounded}px`,
+                    mixBlendMode: "overlay",
+                  }}
+                />
+              )}
             </div>
           </div>
 

@@ -313,6 +313,124 @@ export const Controls: React.FC = () => {
 
       <hr className="border-slate-800" />
 
+      {/* 6.5. 3D Perspective Tilt */}
+      <div className="flex flex-col gap-3">
+        <label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+          <span className="text-base">📐</span>
+          3D Perspective Tilt
+          {(styleOptions.tiltX !== 0 || styleOptions.tiltY !== 0) && (
+            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-bold tracking-wide">LIVE</span>
+          )}
+        </label>
+
+        {/* Preset Buttons */}
+        <div className="grid grid-cols-4 gap-1.5">
+          {[
+            { label: "Flat", x: 0, y: 0, p: 900 },
+            { label: "Gentle", x: -6, y: 8, p: 900 },
+            { label: "Drama", x: -12, y: 16, p: 700 },
+            { label: "Cinema", x: -18, y: 22, p: 500 },
+          ].map((preset) => {
+            const isActive = styleOptions.tiltX === preset.x && styleOptions.tiltY === preset.y && styleOptions.perspective === preset.p;
+            return (
+              <button
+                key={preset.label}
+                onClick={() => {
+                  updateStyleOption("tiltX", preset.x);
+                  updateStyleOption("tiltY", preset.y);
+                  updateStyleOption("perspective", preset.p);
+                }}
+                className={`py-1.5 rounded-lg text-[11px] font-bold transition-all border ${
+                  isActive
+                    ? "bg-indigo-500/20 border-indigo-500/60 text-indigo-300"
+                    : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                }`}
+              >
+                {preset.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tilt X — Vertical axis */}
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400 font-medium">Tilt X <span className="text-slate-600">(up/down)</span></span>
+            <span className="font-mono text-indigo-400 font-bold w-12 text-right">{styleOptions.tiltX > 0 ? "+" : ""}{styleOptions.tiltX}°</span>
+          </div>
+          <input
+            type="range"
+            min={-30}
+            max={30}
+            step={1}
+            value={styleOptions.tiltX}
+            onChange={(e) => updateStyleOption("tiltX", Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none bg-slate-800 accent-indigo-500 cursor-pointer"
+          />
+        </div>
+
+        {/* Tilt Y — Horizontal axis */}
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400 font-medium">Tilt Y <span className="text-slate-600">(left/right)</span></span>
+            <span className="font-mono text-indigo-400 font-bold w-12 text-right">{styleOptions.tiltY > 0 ? "+" : ""}{styleOptions.tiltY}°</span>
+          </div>
+          <input
+            type="range"
+            min={-30}
+            max={30}
+            step={1}
+            value={styleOptions.tiltY}
+            onChange={(e) => updateStyleOption("tiltY", Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none bg-slate-800 accent-indigo-500 cursor-pointer"
+          />
+        </div>
+
+        {/* Perspective Depth */}
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400 font-medium">Depth <span className="text-slate-600">(perspective)</span></span>
+            <span className="font-mono text-indigo-400 font-bold w-14 text-right">{styleOptions.perspective}px</span>
+          </div>
+          <input
+            type="range"
+            min={300}
+            max={1600}
+            step={50}
+            value={styleOptions.perspective}
+            onChange={(e) => updateStyleOption("perspective", Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none bg-slate-800 accent-indigo-500 cursor-pointer"
+          />
+          <div className="flex justify-between text-[9px] text-slate-600 font-medium px-0.5">
+            <span>Close (dramatic)</span>
+            <span>Far (subtle)</span>
+          </div>
+        </div>
+
+        {/* Float Effect toggle */}
+        <label className="flex items-center gap-2.5 cursor-pointer select-none mt-1">
+          <div
+            onClick={() => updateStyleOption("floatEffect", !styleOptions.floatEffect)}
+            className={`relative w-9 h-5 rounded-full transition-colors duration-200 cursor-pointer border ${
+              styleOptions.floatEffect ? "bg-indigo-500 border-indigo-400" : "bg-slate-800 border-slate-700"
+            }`}
+          >
+            <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${styleOptions.floatEffect ? "translate-x-4" : "translate-x-0"}`} />
+          </div>
+          <span className="text-xs text-slate-300 font-medium">
+            ✨ Floating animation
+            <span className="ml-1.5 text-slate-500">(on hover)</span>
+          </span>
+        </label>
+
+        {/* Mouse-follow hint */}
+        <p className="text-[10px] text-slate-600 leading-relaxed">
+          💡 In the preview, hover the card to activate live mouse-follow tilt.
+        </p>
+      </div>
+
+      <hr className="border-slate-800" />
+
       {/* 7. Load Template */}
       <button
         onClick={loadMockTweet}
