@@ -143,6 +143,14 @@ export const THEMES: Record<ThemeKey, ColorTheme> = {
   },
 };
 
+export interface LinkPreview {
+  title: string;
+  description: string;
+  image: string;
+  domain: string;
+  url: string;
+}
+
 export interface TweetData {
   name: string;
   username: string;
@@ -159,6 +167,7 @@ export interface TweetData {
   bookmarks: string;
   views: string;
   images?: string[];
+  linkPreview?: LinkPreview | null;
 }
 
 export interface StyleOptions {
@@ -182,7 +191,7 @@ export interface AppState {
   styleOptions: StyleOptions;
   
   // Actions
-  updateTweetData: (key: keyof TweetData, value: string | boolean | string[]) => void;
+  updateTweetData: (key: keyof TweetData, value: any) => void;
   updateStyleOption: <K extends keyof StyleOptions>(key: K, value: StyleOptions[K]) => void;
   setStatus: (status: AppState["status"]) => void;
   setError: (message: string | null) => void;
@@ -205,6 +214,7 @@ const DEFAULT_TWEET: TweetData = {
   bookmarks: "512",
   views: "89.4K",
   images: [],
+  linkPreview: null,
 };
 
 const DEFAULT_STYLE: StyleOptions = {

@@ -139,6 +139,44 @@ export const TweetCard: React.FC<TweetCardProps> = ({
     );
   };
 
+  const renderLinkPreview = () => {
+    if (!tweetData.linkPreview) return null;
+    const { title, description, image, domain } = tweetData.linkPreview;
+
+    return (
+      <div 
+        className="flex flex-col mt-3 overflow-hidden border" 
+        style={{ 
+          borderRadius: "12px", 
+          borderColor: activeTheme.cardBorder,
+          backgroundColor: activeTheme.isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.01)"
+        }}
+      >
+        {image && (
+          <img 
+            src={getProxyUrl(image)}
+            alt={title}
+            className="w-full object-cover max-h-[240px] border-b"
+            style={{ borderColor: activeTheme.cardBorder, display: "block" }}
+          />
+        )}
+        <div className="p-3 flex flex-col gap-0.5 text-left">
+          <span className="text-[11px] opacity-50 lowercase tracking-tight">
+            {domain}
+          </span>
+          <span className="text-[13px] font-bold line-clamp-1" style={{ color: activeTheme.cardText }}>
+            {title}
+          </span>
+          {description && (
+            <span className="text-[11px] opacity-60 line-clamp-2 leading-tight" style={{ color: activeTheme.cardText }}>
+              {description}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // -------------------------------------------------------------
   // RENDERING LAYOUT VARIANTS
   // -------------------------------------------------------------
@@ -174,6 +212,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
                   {tweetData.text}
                 </div>
                 {renderMedia()}
+                {renderLinkPreview()}
               </div>
             </div>
             {showMetrics && renderCompactMetrics()}
@@ -197,6 +236,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
                   {tweetData.text}
                 </div>
                 {renderMedia()}
+                {renderLinkPreview()}
               </div>
               {showAvatars && (
                 <div className="relative shrink-0 select-none cursor-pointer" onClick={handleAvatarClick}>
@@ -256,6 +296,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             {showMetrics && (
               <div className="flex items-center gap-4 text-xs opacity-60 border-t pt-3" style={{ borderColor: activeTheme.cardBorder }}>
                 <div>
@@ -302,6 +343,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               &ldquo;{tweetData.text}&rdquo;
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             {showMetrics && renderCompactMetrics()}
           </div>
         );
@@ -349,6 +391,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             {showMetrics && (
               <div className="flex justify-between text-xs opacity-60 border-t pt-2" style={{ borderColor: activeTheme.cardBorder }}>
                 <span>METRICS // LKS:{tweetData.likes} RPS:{tweetData.retweets}</span>
@@ -390,6 +433,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             <div className="flex flex-col gap-1.5 pt-2 border-t text-xs opacity-60" style={{ borderColor: activeTheme.cardBorder }}>
               <div className="flex justify-between">
                 <span>ENGAGEMENT LEVEL:</span>
@@ -419,6 +463,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             <div className="flex items-center justify-between border-t pt-4" style={{ borderColor: activeTheme.cardBorder }}>
               <div className="flex items-center gap-2">
                 {showAvatars && (
@@ -467,6 +512,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             {showMetrics && (
               <div className="flex gap-4 text-xs opacity-50 border-t pt-2" style={{ borderColor: activeTheme.cardBorder }}>
                 <span>{tweetData.likes} Likes</span>
@@ -512,6 +558,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
             {showMetrics && renderCompactMetrics()}
           </div>
         );
@@ -544,6 +591,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               </span>
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
 
             {/* Avatar and author details at bottom */}
             <div className="flex flex-col items-center mt-6 pt-4 border-t w-full" style={{ borderColor: activeTheme.cardBorder }}>
@@ -608,6 +656,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
 
             {/* Small X logo at bottom center */}
             <div className="opacity-30 mt-6 pt-4 border-t w-full flex justify-center" style={{ borderColor: activeTheme.cardBorder }}>
@@ -663,6 +712,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({
               {tweetData.text}
             </div>
             {renderMedia()}
+            {renderLinkPreview()}
 
             {/* Date and Source */}
             <div className="text-[13px] opacity-50 pb-3 border-b" style={{ borderColor: activeTheme.cardBorder }}>

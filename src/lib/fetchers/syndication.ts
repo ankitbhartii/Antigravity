@@ -1,5 +1,55 @@
 import { NitterTweet } from "./nitter";
 
+async function fetchOgMetadata(url: string): Promise<any | null> {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      },
+      signal: AbortSignal.timeout(3000), // 3 seconds timeout
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const titleMatch = html.match(/<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']*)["']/i) ||
+                       html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*property=["']og:title["']/i) ||
+                       html.match(/<title[^>]*>([^<]*)<\/title>/i);
+    const descMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']*)["']/i) ||
+                     html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*property=["']og:description["']/i) ||
+                     html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i);
+    const imageMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']*)["']/i) ||
+                      html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*property=["']og:image["']/i);
+
+    const title = titleMatch ? titleMatch[1].trim() : "";
+    const description = descMatch ? descMatch[1].trim() : "";
+    const image = imageMatch ? imageMatch[1].trim() : "";
+    
+    const decodeHtml = (str: string) => {
+      return str
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+    };
+
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname.replace("www.", "");
+
+    return {
+      title: decodeHtml(title),
+      description: decodeHtml(description),
+      image,
+      domain,
+      url,
+    };
+  } catch (e) {
+    console.error("Failed fetching OG metadata:", e);
+    return null;
+  }
+}
+
 function getToken(id: string): string {
   return ((Number(id) / 1e15) * Math.PI)
     .toString(36)
@@ -46,11 +96,16 @@ export async function fetchFromSyndication(tweetId: string): Promise<any | null>
         return num.toLocaleString();
       };
 
-      // Clean tweet text (remove media links at the end of the text if present)
+      // Clean tweet text (remove media links and external preview links at the end of the text if present)
       let tweetText = data.text || "";
       if (data.entities?.media) {
         data.entities.media.forEach((m: any) => {
           tweetText = tweetText.replace(m.url, "");
+        });
+      }
+      if (data.entities?.urls) {
+        data.entities.urls.forEach((u: any) => {
+          tweetText = tweetText.replace(u.url, "");
         });
       }
       tweetText = tweetText.trim();
@@ -59,6 +114,18 @@ export async function fetchFromSyndication(tweetId: string): Promise<any | null>
       const images = data.photos
         ? data.photos.map((p: any) => p.url)
         : [];
+
+      // Extract link preview metadata if there is an external URL
+      let linkPreview: any = null;
+      if (data.entities?.urls && data.entities.urls.length > 0) {
+        const externalUrl = data.entities.urls.find((u: any) => {
+          const exp = u.expanded_url || "";
+          return exp && !exp.includes("twitter.com") && !exp.includes("x.com");
+        });
+        if (externalUrl) {
+          linkPreview = await fetchOgMetadata(externalUrl.expanded_url);
+        }
+      }
 
       return {
         name: data.user.name,
@@ -74,6 +141,7 @@ export async function fetchFromSyndication(tweetId: string): Promise<any | null>
         views: formatNumber(data.view_count || 0),
         source: "X for Web",
         images: images,
+        linkPreview: linkPreview,
       };
     }
   } catch (err) {
